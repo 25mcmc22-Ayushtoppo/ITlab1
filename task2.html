@@ -52,6 +52,8 @@
         </p>
         
     </article>
+
+    <div id="disqus_thread"></div>
 </main>
 
 
@@ -68,6 +70,23 @@
                 <li>Personal</li>
             </ul>
         </aside>
+        <script>
+var disqus_config = function () {
+    this.page.url = window.location.href;
+    this.page.identifier = "my-blog-page";
+};
+
+(function () {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://my-blog-51b3pdxkl8.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+
+<noscript>
+Please enable JavaScript to view the comments powered by Disqus.
+</noscript>
     </div>
 
     <footer>
