@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Crimson Casino</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #120708;
+      color: white;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(90deg, #8b0000, crimson);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      letter-spacing: 2px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background: #8b0000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .content {
+      margin-top: 70px;
+      margin-bottom: 60px;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .section-title {
+      position: sticky;
+      top: 70px;
+      background: #120708;
+      padding: 10px 0;
+      font-size: 22px;
+      font-weight: bold;
+      color: crimson;
+      z-index: 500;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #1c0d0e;
+      border: 2px solid crimson;
+      padding: 15px;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(220, 20, 60, 0.4);
+    }
+
+    .image-box {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      border-radius: 6px;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(139, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+
+    .image-box:hover .overlay {
+      opacity: 1;
+    }
+
+    .card h3 {
+      margin: 12px 0 6px;
+      color: crimson;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .badge {
+      color: gold;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CRIMSON CASINO</h1>
+  </header>
+
+  <div class="content">
+    <div class="section-title">Popular Games</div>
+
+    <div class="gallery">
+
+      <div class="card">
+        <div class="image-box">
+          <img src="https://via.placeholder.com/400x300" alt="Slots">
+          <div class="overlay">PLAY NOW</div>
+        </div>
+        <h3>Lucky Slots</h3>
+        <p>Spin the reels and win massive jackpots.</p>
+        <p>RTP: <span class="badge">96%</span></p>
+      </div>
+
+      <div class="card">
+        <div class="image-box">
+          <img src="https://via.placeholder.com/400x300" alt="Poker">
+          <div class="overlay">JOIN TABLE</div>
+        </div>
+        <h3>Texas Hold’em</h3>
+        <p>Challenge players worldwide in live poker.</p>
+        <p>Buy-in: <span class="badge">Rs. 10+</span></p>
+      </div>
+
+      <div class="card">
+        <div class="image-box">
+          <img src="https://via.placeholder.com/400x300" alt="Roulette">
+          <div class="overlay">PLACE BET</div>
+        </div>
+        <h3>Roulette Royale</h3>
+        <p>Classic casino roulette with live dealers.</p>
+        <p>Payout: <span class="badge">35:1</span></p>
+      </div>
+
+      <div class="card">
+        <div class="image-box">
+          <img src="https://via.placeholder.com/400x300" alt="Blackjack">
+          <div class="overlay">PLAY NOW</div>
+        </div>
+        <h3>Blackjack Pro</h3>
+        <p>Beat the dealer and hit 21.</p>
+        <p>Min Bet: <span class="badge">$5</span></p>
+      </div>
+
+      <div class="card">
+        <div class="image-box">
+          <img src="https://via.placeholder.com/400x300" alt="Sports Betting">
+          <div class="overlay">BET LIVE</div>
+        </div>
+        <h3>Sports Betting</h3>
+        <p>Live odds on football, basketball, and more.</p>
+        <p>Bonus: <span class="badge">Free Bets</span></p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>18+ | Play Responsibly | © 2026 Crimson Casino</p>
+  </footer>
+
+</body>
+</html>
