@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+    <book>
+        <title>NCERT Physics Class 12</title>
+        <author>Dr. H.C. Verma</author>
+        <genre>Textbook</genre>
+        <price>250</price>
+        <publish_date>2015-01-01</publish_date>
+    </book>
+    <book>
+        <title>Mathematics for IIT-JEE</title>
+        <author>M.L. Khanna</author>
+        <genre>Reference</genre>
+        <price>450</price>
+        <publish_date>2018-06-12</publish_date>
+    </book>
+    <book>
+        <title>Wings of Fire</title>
+        <author>A.P.J. Abdul Kalam</author>
+        <genre>Biography</genre>
+        <price>200</price>
+        <publish_date>1999-08-15</publish_date>
+    </book>
+    <book>
+        <title>Five Point Someone</title>
+        <author>Chetan Bhagat</author>
+        <genre>Fiction</genre>
+        <price>150</price>
+        <publish_date>2004-07-01</publish_date>
+    </book>
+    <book>
+        <title>Objective General Knowledge</title>
+        <author>Lucent</author>
+        <genre>Reference</genre>
+        <price>300</price>
+        <publish_date>2020-01-01</publish_date>
+    </book>
+    <book>
+        <title>Indian Polity</title>
+        <author>M. Laxmikanth</author>
+        <genre>Reference</genre>
+        <price>550</price>
+        <publish_date>2019-05-10</publish_date>
+    </book>
+</catalog>

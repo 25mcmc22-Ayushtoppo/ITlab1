@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Book Catalog (India)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff3e0;
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: #e65100;
+        }
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        select, input {
+            padding: 5px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 6px 12px;
+            background: #ef6c00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #e65100;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #fb8c00;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #fff8e1;
+        }
+        .price-range {
+            width: 80px;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Book Catalog - India</h2>
+
+<div class="filters">
+    <select id="genreFilter">
+        <option value="">All Categories</option>
+    </select>
+    <select id="authorFilter">
+        <option value="">All Authors</option>
+    </select>
+    <input type="number" id="minPrice" class="price-range" placeholder="Min ₹" />
+    <input type="number" id="maxPrice" class="price-range" placeholder="Max ₹" />
+    <button id="applyFilter">Apply Filter</button>
+</div>
+
+<table id="booksTable">
+    <thead>
+        <tr>
+            <th>Title</th><th>Author</th><th>Category</th><th>Price (₹)</th><th>Publish Date</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+$(document).ready(function() {
+    let booksJSON = [];
+
+    function parseXMLtoJSON(xml) {
+        const books = [];
+        $(xml).find('book').each(function() {
+            const book = {
+                title: $(this).find('title').text(),
+                author: $(this).find('author').text(),
+                genre: $(this).find('genre').text(),
+                price: parseFloat($(this).find('price').text()),
+                publish_date: $(this).find('publish_date').text()
+            };
+            books.push(book);
+        });
+        return books;
+    }
+
+    function populateFilters() {
+        const genres = [...new Set(booksJSON.map(b => b.genre))];
+        const authors = [...new Set(booksJSON.map(b => b.author))];
+        genres.forEach(g => $('#genreFilter').append(`<option value="${g}">${g}</option>`));
+        authors.forEach(a => $('#authorFilter').append(`<option value="${a}">${a}</option>`));
+    }
+
+    function renderTable(data) {
+        const tbody = $('#booksTable tbody');
+        tbody.empty();
+        data.forEach(book => {
+            tbody.append(`
+                <tr>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.genre}</td>
+                    <td>₹${book.price.toFixed(0)}</td>
+                    <td>${book.publish_date}</td>
+                </tr>
+            `);
+        });
+    }
+
+    function applyFilters() {
+        const genre = $('#genreFilter').val();
+        const author = $('#authorFilter').val();
+        const minPrice = parseFloat($('#minPrice').val());
+        const maxPrice = parseFloat($('#maxPrice').val());
+
+        let filtered = booksJSON;
+
+        if (genre) filtered = filtered.filter(b => b.genre === genre);
+        if (author) filtered = filtered.filter(b => b.author === author);
+        if (!isNaN(minPrice)) filtered = filtered.filter(b => b.price >= minPrice);
+        if (!isNaN(maxPrice)) filtered = filtered.filter(b => b.price <= maxPrice);
+
+        renderTable(filtered);
+    }
+
+    $.ajax({
+        url: 'task8.xml',
+        dataType: 'xml',
+        success: function(xml) {
+            booksJSON = parseXMLtoJSON(xml);
+            populateFilters();
+            renderTable(booksJSON);
+        },
+        error: function() {
+            alert('Failed to load XML data.');
+        }
+    });
+
+    $('#applyFilter').on('click', applyFilters);
+});
+</script>
+
+</body>
+</html>

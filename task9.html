@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic JSON Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .error { color: red; font-size: 12px; margin-top: 5px; }
+        .hidden { display: none; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { padding: 6px; width: 250px; }
+        button { padding: 8px 15px; }
+    </style>
+</head>
+<body>
+
+<h2>Dynamic Registration Form</h2>
+<form id="dynamicForm"></form>
+
+<script>
+$(document).ready(function () {
+
+    const formJSON = {
+        fields: [
+            { type: "text", label: "Full Name", name: "name", required: true },
+            { type: "email", label: "Email", name: "email", required: true },
+            { type: "password", label: "Password", name: "password", required: true, minLength: 6 },
+            {
+                type: "select",
+                label: "Country",
+                name: "country",
+                required: true,
+                options: ["Select Country", "USA", "Canada", "India"]
+            },
+            {
+                type: "select",
+                label: "State",
+                name: "state",
+                required: true,
+                options: ["California", "Texas", "New York"],
+                dependsOn: { field: "country", value: "USA" }
+            },
+            {
+                type: "select",
+                label: "Account Type",
+                name: "accountType",
+                required: true,
+                options: ["Select Type", "Personal", "Business"]
+            },
+            {
+                type: "text",
+                label: "Company Name",
+                name: "companyName",
+                required: true,
+                dependsOn: { field: "accountType", value: "Business" }
+            }
+        ]
+    };
+
+    const form = $("#dynamicForm");
+
+    function buildForm() {
+        formJSON.fields.forEach(field => {
+
+            const formGroup = $("<div>")
+                .addClass("form-group")
+                .attr("id", field.name + "-group");
+
+            const label = $("<label>").text(field.label);
+            formGroup.append(label);
+
+            let input;
+
+            if (field.type === "select") {
+                input = $("<select>").attr("name", field.name);
+                field.options.forEach(option => {
+                    input.append($("<option>").val(option).text(option));
+                });
+            } else {
+                input = $("<input>")
+                    .attr("type", field.type)
+                    .attr("name", field.name);
+            }
+
+            formGroup.append(input);
+            formGroup.append($("<div>").addClass("error"));
+
+            if (field.dependsOn) {
+                formGroup.addClass("hidden");
+            }
+
+            form.append(formGroup);
+        });
+
+        form.append($("<button>").attr("type", "submit").text("Submit"));
+    }
+
+    buildForm();
+
+    form.on("change", "select", function () {
+        const changedField = $(this).attr("name");
+        const selectedValue = $(this).val();
+
+        formJSON.fields.forEach(field => {
+            if (field.dependsOn && field.dependsOn.field === changedField) {
+
+                const targetGroup = $("#" + field.name + "-group");
+
+                if (selectedValue === field.dependsOn.value) {
+                    targetGroup.removeClass("hidden");
+                } else {
+                    targetGroup.addClass("hidden");
+                    targetGroup.find("input, select").val("");
+                }
+            }
+        });
+    });
+
+    form.on("submit", function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        $(".error").text("");
+
+        formJSON.fields.forEach(field => {
+
+            const group = $("#" + field.name + "-group");
+            const input = group.find("input, select");
+            const value = input.val();
+            const errorDiv = group.find(".error");
+
+            if (group.hasClass("hidden")) return;
+
+            if (field.required && (!value || value.startsWith("Select"))) {
+                errorDiv.text(field.label + " is required.");
+                isValid = false;
+                return;
+            }
+
+            if (field.type === "email") {
+                const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+                if (value && !emailPattern.test(value)) {
+                    errorDiv.text("Invalid email format.");
+                    isValid = false;
+                }
+            }
+
+            if (field.type === "password") {
+                const strongPasswordPattern =
+                    /^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{6,}$/;
+
+                if (!strongPasswordPattern.test(value)) {
+                    errorDiv.text(
+                        "Password must contain uppercase, number, special character (min 6 chars)."
+                    );
+                    isValid = false;
+                }
+            }
+        });
+
+        if (isValid) {
+            alert("Form submitted successfully!");
+            this.reset();
+            $(".hidden").addClass("hidden");
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

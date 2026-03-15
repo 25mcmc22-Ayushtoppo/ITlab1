@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Tab Plugin</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            padding: 60px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tab-wrapper {
+            width: 650px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            background: linear-gradient(90deg, #4e73df, #1cc88a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tabs {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+            display: flex;
+            border-bottom: 3px solid #e3e6f0;
+        }
+
+        .tabs li {
+            padding: 14px 28px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+            color: #555;
+        }
+
+        .tabs li:hover {
+            background: rgba(78,115,223,0.1);
+            color: #4e73df;
+        }
+
+        .tabs li.active-tab {
+            color: white;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+        }
+
+        .tabs li:focus {
+            outline: 2px solid #4e73df;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+            border-radius: 10px;
+            animation: fadeSlide 0.4s ease;
+            color: #333;
+        }
+
+        #home { background: #f8f9fc; }
+        #about { background: #e3f2fd; }
+        #contact { background: #e8f5e9; }
+
+        .tab-content button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #4e73df;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-content button:hover {
+            background: #2e59d9;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 700px) {
+            .tab-wrapper { width: 100%; }
+            .tabs { flex-direction: column; }
+            .tabs li { margin-bottom: 5px; border-radius: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="tab-wrapper">
+    <h2>Tab Navigation</h2>
+
+    <ul class="tabs">
+        <li data-tab="home" tabindex="0">Home</li>
+        <li data-tab="about" tabindex="0">About</li>
+        <li data-tab="contact" tabindex="0">Contact</li>
+    </ul>
+
+    <div id="home" class="tab-content">
+        <h3>Home</h3>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Vestibulum vehicula ex eu augue fermentum, vel faucibus 
+            mauris tincidunt. Integer sit amet nisi sed libero 
+            consequat tincidunt non ac velit.
+        </p>
+        <button>Learn More</button>
+    </div>
+
+    <div id="about" class="tab-content">
+        <h3>About</h3>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Curabitur nec nulla at sapien tristique convallis. 
+            Suspendisse potenti. Donec vel lorem at quam 
+            pellentesque vulputate at nec purus.
+        </p>
+        <button>Read More</button>
+    </div>
+
+    <div id="contact" class="tab-content">
+        <h3>Contact</h3>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Aliquam erat volutpat. Pellentesque habitant morbi 
+            tristique senectus et netus et malesuada fames ac turpis egestas.
+        </p>
+        <button>Send Message</button>
+    </div>
+</div>
+
+<script>
+(function ($) {
+
+    $.fn.simpleTabs = function (options) {
+
+        const settings = $.extend({
+            activeClass: "active-tab",
+            animationSpeed: 300,
+            defaultTab: 0
+        }, options);
+
+        const container = this;
+        const tabs = container.find("li");
+        const contents = $(".tab-content");
+
+        function activateTab(tabElement, updateHash = true) {
+            const targetId = tabElement.data("tab");
+
+            tabs.removeClass(settings.activeClass);
+            tabElement.addClass(settings.activeClass);
+
+            contents.stop(true, true).fadeOut(settings.animationSpeed);
+            $("#" + targetId).fadeIn(settings.animationSpeed);
+
+            if (updateHash) {
+                window.location.hash = targetId;
+            }
+        }
+
+        tabs.each(function () {
+            $(this).on("click", function () {
+                activateTab($(this));
+            });
+
+            $(this).on("keydown", function (e) {
+                const currentIndex = tabs.index(this);
+
+                if (e.key === "ArrowRight") {
+                    const next = tabs.eq((currentIndex + 1) % tabs.length);
+                    next.focus();
+                    activateTab(next);
+                }
+
+                if (e.key === "ArrowLeft") {
+                    const prev = tabs.eq((currentIndex - 1 + tabs.length) % tabs.length);
+                    prev.focus();
+                    activateTab(prev);
+                }
+
+                if (e.key === "Enter" || e.key === " ") {
+                    activateTab($(this));
+                }
+            });
+        });
+
+        function initFromHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash && $("#" + hash).length) {
+                const tab = tabs.filter(`[data-tab='${hash}']`);
+                if (tab.length) {
+                    activateTab(tab, false);
+                    return;
+                }
+            }
+            activateTab(tabs.eq(settings.defaultTab), false);
+        }
+
+        $(window).on("hashchange", function () {
+            initFromHash();
+        });
+
+        initFromHash();
+
+        return this;
+    };
+
+}(jQuery));
+
+$(".tabs").simpleTabs({
+    activeClass: "active-tab",
+    animationSpeed: 350,
+    defaultTab: 0
+});
+</script>
+
+</body>
+</html>
